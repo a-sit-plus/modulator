@@ -1,9 +1,8 @@
-import at.asitplus.gradle.modulator.DependencyDeclaration
+import at.asitplus.gradle.modulator.ATTR_PREFIX_MODULATION
+import at.asitplus.gradle.modulator.ModuleDeclaration
 import at.asitplus.gradle.modulator.Modulation
 import at.asitplus.gradle.modulator.VersionConstraintDeclaration
 import at.asitplus.gradle.modulator.store
-import java.io.StringWriter
-import java.util.Properties
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -12,6 +11,10 @@ class ModulationTest {
 
     @Test
     fun testDatamodel() {
+
+
+
+
         val ver = VersionConstraintDeclaration(
             branch = "main",
             requiredVersion = null,
@@ -19,37 +22,36 @@ class ModulationTest {
             rejectedVersion = null,
             strictVersion = null
         )
-        println(ver.store())
-        val verRead = VersionConstraintDeclaration.load(ver.store())
+        println(ver.store(ATTR_PREFIX_MODULATION))
+        val verRead = VersionConstraintDeclaration.load(ver.store(ATTR_PREFIX_MODULATION),ATTR_PREFIX_MODULATION)
         assertEquals(ver, verRead)
 
-        val dep1 = DependencyDeclaration(group = "at.asitplus.signum", artifact = "indispensable-josef", ver)
-        println(dep1.store())
+        val dep1 = ModuleDeclaration(group = "at.asitplus.signum", artifact = "indispensable-josef", ver)
+        println(dep1.store(ATTR_PREFIX_MODULATION))
 
-        val dep1Read = DependencyDeclaration.load(dep1.store())
+        val dep1Read = ModuleDeclaration.load(dep1.store(ATTR_PREFIX_MODULATION),ATTR_PREFIX_MODULATION)
         assertEquals(dep1, dep1Read)
 
-        val dep2 = DependencyDeclaration(
+        val dep2 = ModuleDeclaration(
             group = "at.asitplus.signum", artifact = "supreme",
             VersionConstraintDeclaration(null, null, null, null, null)
         )
-        println(dep2.store())
-        val dep2Read = DependencyDeclaration.load(dep2.store())
+        println(dep2.store(ATTR_PREFIX_MODULATION))
+        val dep2Read = ModuleDeclaration.load(dep2.store(ATTR_PREFIX_MODULATION),ATTR_PREFIX_MODULATION)
         assertEquals(dep2, dep2Read)
         assertNotEquals(dep1, dep2Read)
 
-        val bridge = DependencyDeclaration(group = "at.asitplus.signum", artifact = "josef-supreme", ver)
-        println(bridge.store())
-        val bridgeRead = DependencyDeclaration.load(bridge.store())
+        val bridge = ModuleDeclaration(group = "at.asitplus.signum", artifact = "josef-supreme", ver)
+        println(bridge.store(ATTR_PREFIX_MODULATION))
+        val bridgeRead = ModuleDeclaration.load(bridge.store(ATTR_PREFIX_MODULATION),ATTR_PREFIX_MODULATION)
         assertEquals(bridge, bridgeRead)
         assertNotEquals(bridge, dep1Read)
         assertNotEquals(bridge, dep2Read)
 
         val modulation = Modulation(listOf(dep1, dep2), bridge)
-        println(modulation.store())
-        val modulationRead = Modulation.load(modulation.store())
+        println(modulation.store(ATTR_PREFIX_MODULATION))
+        val modulationRead = Modulation.load(modulation.store(ATTR_PREFIX_MODULATION),ATTR_PREFIX_MODULATION)
         assertEquals(modulation, modulationRead)
-
 
     }
 }

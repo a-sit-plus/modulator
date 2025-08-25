@@ -1,10 +1,17 @@
 package at.asitplus.gradle.modulator
 
+import org.gradle.api.Project
+import org.gradle.api.attributes.Attribute
 import java.io.StringReader
 import java.io.StringWriter
 import java.util.*
 
-fun Properties.store(prefix: String? = null): String {
+internal const val ATTR_PREFIX_MODULATION = "at.asitplus.modulation.v0"
+internal const val ATTR_PREFIX_CARRIER = "$ATTR_PREFIX_MODULATION.carrier"
+internal val ATTR_CARRIER: Attribute<String> = Attribute.of(ATTR_PREFIX_CARRIER, String::class.java)
+
+
+internal fun Properties.store(prefix: String? = null): String {
     val prefix = prefix?.let { "$it." } ?: ""
     val os = StringWriter()
     val map = TreeMap<String, Any>()
@@ -13,39 +20,45 @@ fun Properties.store(prefix: String? = null): String {
     return os.toString()
 }
 
-data class Modulation(val dependencies: List<DependencyDeclaration>, val bridgeDependency: DependencyDeclaration) :
+internal fun Properties.toAttributesMap(): Map<Attribute<String>, String> =
+    map { (key, value) ->
+        Attribute.of("$ATTR_PREFIX_MODULATION.$key", String::class.java) to value.toString()
+    }.toMap()
+
+
+data class Modulation(val carriers: List<ModuleDeclaration>, val signal: ModuleDeclaration) :
     Properties() {
     init {
-        require(dependencies.size <= 2) { "At least two dependencies must be declared to pull in a bridge dependency. Provided: ${dependencies.size}" }
+        require(carriers.size <= 2) { "At least two carriers must be declared to modulate a signal. Number of carriers: ${carriers.size}" }
 
-        dependencies.forEachIndexed { index, dependencyDeclaration ->
+        carriers.forEachIndexed { index, dependencyDeclaration ->
             dependencyDeclaration.forEach { (k, v) ->
-                setProperty("dependencies.$index.$k", v.toString())
+                setProperty("carriers.$index.$k", v.toString())
             }
         }
-        bridgeDependency.forEach { (k, v) ->
-            setProperty("bridge.$k", v.toString())
+        signal.forEach { (k, v) ->
+            setProperty("signal.$k", v.toString())
         }
     }
 
     companion object {
-        fun load(properties: Properties, prefix: String? = null): Modulation {
+        fun load(properties: Map<String,String>, prefix: String? = null): Modulation {
             val prefix = prefix?.let { "$it." } ?: ""
-            val dependencies = properties.keysGroupedByDependencyIndex("${prefix}dependencies")
-                .map { DependencyDeclaration.load(properties, it) }
+            val carriers = properties.keysGroupedByDependencyIndex("${prefix}carriers")
+                .map { ModuleDeclaration.load(properties, it) }
 
-            val bridgeDependency = DependencyDeclaration.load(properties, "${prefix}bridge")
-            return Modulation(dependencies, bridgeDependency)
+            val signalDependency = ModuleDeclaration.load(properties, "${prefix}signal")
+            return Modulation(carriers, signalDependency)
         }
 
         fun load(stringRepresentation: String, prefix: String? = null) = load(Properties().apply {
             load(StringReader(stringRepresentation))
-        }, prefix)
+        } as Map<String,String>, prefix)
     }
 
 }
 
-data class DependencyDeclaration(val group: String, val artifact: String, val version: VersionConstraintDeclaration) :
+data class ModuleDeclaration(val group: String, val artifact: String, val version: VersionConstraintDeclaration) :
     Properties() {
     init {
         setProperty("group", group)
@@ -57,19 +70,19 @@ data class DependencyDeclaration(val group: String, val artifact: String, val ve
         }
     }
 
-    companion object {
-        fun load(properties: Properties, prefix: String? = null): DependencyDeclaration {
+    companion object Companion {
+        fun load(properties: Map<String, String>, prefix: String? = null): ModuleDeclaration {
             val prefix = prefix?.let { "$it." } ?: ""
 
-            val group = properties.getProperty("${prefix}group")
-            val artifact = properties.getProperty("${prefix}artifact")
+            val group = properties["${prefix}group"]
+            val artifact = properties["${prefix}artifact"]
             val version = VersionConstraintDeclaration.load(properties, "${prefix}version")
-            return DependencyDeclaration(group, artifact, version)
+            return ModuleDeclaration(group!!, artifact!!, version)
         }
 
         fun load(stringRepresentation: String, prefix: String? = null) = load(Properties().apply {
             load(StringReader(stringRepresentation))
-        }, prefix)
+        }as Map<String,String>, prefix)
     }
 }
 
@@ -90,28 +103,28 @@ data class VersionConstraintDeclaration(
     }
 
     companion object {
-        fun load(properties: Properties, prefix: String? = null): VersionConstraintDeclaration {
+        fun load(properties: Map<String,String>, prefix: String? = null): VersionConstraintDeclaration {
             val prefix = prefix?.let { "$it." } ?: ""
             return VersionConstraintDeclaration(
-                properties.getProperty("${prefix}branch"),
-                properties.getProperty("${prefix}requiredVersion"),
-                properties.getProperty("${prefix}preferredVersion"),
-                properties.getProperty("${prefix}strictVersion"),
-                properties.getProperty("${prefix}rejectedVersion")
+                properties["${prefix}branch"],
+                properties["${prefix}requiredVersion"],
+                properties["${prefix}preferredVersion"],
+                properties["${prefix}strictVersion"],
+                properties["${prefix}rejectedVersion"]
             )
         }
 
         fun load(stringRepresentation: String, prefix: String? = null) = load(Properties().apply {
             load(StringReader(stringRepresentation))
-        }, prefix)
+        }as Map<String,String>, prefix)
     }
 }
 
-private fun Properties.keysGroupedByDependencyIndex(prefix: String?): List<String> {
+private fun Map<String,String>.keysGroupedByDependencyIndex(prefix: String?): List<String> {
     val prefix = prefix?.let { "$it." } ?: ""
     val indices = mutableSetOf<Int>()
 
-    for (name in stringPropertyNames()) {
+    for (name in keys) {
         if (!name.startsWith(prefix)) continue
 
         val remainder = name.substring(prefix.length)
@@ -124,3 +137,20 @@ private fun Properties.keysGroupedByDependencyIndex(prefix: String?): List<Strin
 }
 
 
+fun Project.toModuleDeclaration(): ModuleDeclaration {
+    val grp = group.toString()
+    val moduleName = name
+    val ver = version
+    return ModuleDeclaration(
+        grp.toString(),
+        moduleName,
+        VersionConstraintDeclaration(
+            branch = null,
+            rejectedVersion = null,
+            preferredVersion = ver.toString(),
+            strictVersion = null,
+            requiredVersion = null,
+        )
+    )
+
+}
