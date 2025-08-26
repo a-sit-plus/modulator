@@ -28,7 +28,8 @@ Enter _modulator_ – a lean Gradle plugin that brings two complementary capabil
 
 
 Just apply `at.asitplus.gradle.modulator` to any Gradle module that requires either capability.
-That’s it – no custom wiring, no dependency clutter, no hacks, but full backwards compatibility with all Kotlin and Gradle tooling!
+That’s it – no custom wiring, no dependency clutter, no hacks, no compiler plugins, no code generation,
+but full backwards compatibility with all Kotlin and Gradle tooling!
 
 
 ## Quickstart
@@ -88,7 +89,7 @@ The buildscripts of neither `modA` nor `modB` require any changes or even the mo
 
 _modulator_ works its magic in consuming projects even less obtrusively:
 Just apply the modulator Gradle plugin in consumers and the carrier dependencies as regular `api` or `implementation` dependencies.
-No other changes are required to the buildscript
+No other changes are required to the buildscript.
 
 ```kotlin
 //build.gradle.kts of consuming project
@@ -129,6 +130,7 @@ for `implementation` dependencies.
 For library authors, this is not quite as hassle-free as `compileOnly` dependencies on the JVM but:
 * The project setup remains fully transparent, predictable, intelligible and easily maintainable.
 * The use of dedicated bridge modules and enriched Gradle metadata on carrier modules is fully and perfectly backwards-compatible with the whole Gradle/KMP ecosystem, and it will stay that way.
+* Your project either compile or it does not run. No `RuntimeException` or other unpleasant surprises, because everything is known at compile-time.
 
 In the end, no invasive changes to the KMP/Gradle tooling are required, as _modulator_ simply adds additional dependencies in the same way as adding them explicitly yourself.
 
