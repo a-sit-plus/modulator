@@ -33,7 +33,7 @@ but full backwards compatibility with all Kotlin and Gradle tooling!
 
 
 ## Quickstart
-_modulator_ introduces a new type of dependencies alongside `api`, `implementation`, …, that are available now: `carrier` dependencies.
+_modulator_ introduces a new type of dependency: `carrier` dependencies, that are available alongside `api`, `implementation`, and so forth.
 A bridge / glue module depends on two or more carrier modules (within the same multi-module gradle project).
 When all carriers are present in a consumer, the bridge module is automatically pulled in.
 
@@ -144,7 +144,8 @@ The `example` directory contains two projects that showcase _modulator_:
 
 To try it out: publish `modulatingProduce` to maven local and open `mulatedConsumer` in IDEA to witness the magic!
 
----
+
+<hr>
 
 <p align="center">
 The Apache License does not apply to the logos, (including the A-SIT logo) and the project/module name(s), as these are the sole property of
