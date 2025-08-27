@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    id("at.asitplus.gradle.modulator") version "0.1-SNAPSHOT"
+    id("at.asitplus.gradle.modulator") version "0.1.0"
 }
 
 kotlin {

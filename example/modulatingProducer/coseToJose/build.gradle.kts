@@ -3,7 +3,7 @@ import at.asitplus.gradle.modulator.carrier
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     `maven-publish`
-    id("at.asitplus.gradle.modulator") version "0.1-SNAPSHOT"
+    id("at.asitplus.gradle.modulator") version "0.1.0"
 }
 group ="at.asitplus"
 version ="0.1-SNAPSHOT"

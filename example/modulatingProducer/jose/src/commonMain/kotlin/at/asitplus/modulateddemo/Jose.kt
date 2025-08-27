@@ -1,3 +1,3 @@
 package at.asitplus.modulateddemo
 
-class SomeJoseDataStructure(val kid:String)
+class SomeJoseDataStructure(val someJoseSpecificData:String)

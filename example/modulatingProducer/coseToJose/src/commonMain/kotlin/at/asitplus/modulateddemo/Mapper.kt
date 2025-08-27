@@ -1,4 +1,4 @@
 package at.asitplus.modulateddemo
 
-fun SomeJoseDataStructure.toCose() = SomeCoseDataStructure(kid)
-fun SomeCoseDataStructure.toJose() = SomeJoseDataStructure(coseKid)
+fun SomeJoseDataStructure.toCose() = SomeCoseDataStructure(someJoseSpecificData.encodeToByteArray())
+fun SomeCoseDataStructure.toJose() = SomeJoseDataStructure(someCoseSpecificProperty.decodeToString())

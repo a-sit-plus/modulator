@@ -9,7 +9,7 @@
 [![Gradle plugin portal](https://img.shields.io/gradle-plugin-portal/v/at.asitplus.gradle.modulator?label=Gradle%20plugin%20portal)](https://plugins.gradle.org/plugin/at.asitplus.gradle.modulator)
 
 
-**_modulator_ - a lean Gradle plugin that gives Kotlin Multiplatform the superpower of JVM-style `compileOnly` dependencies! No bloat, no dirty tricks, just clean, modular APIs, and full toolchain compatibility – forever!**
+**_modulator_ – a lean Gradle plugin that gives Kotlin Multiplatform the superpower of JVM-style `compileOnly` dependencies! No bloat, no dirty tricks, just clean, modular APIs, and full toolchain compatibility – forever!**
 
 
 </div>
@@ -51,7 +51,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     `maven-publish`
     /* …… */
-    id("at.asitplus.gradle.modulator") version "$moduatorVersion"
+    id("at.asitplus.gradle.modulator") version "$modulatorVersion"
 }
 
 kotlin {
@@ -131,7 +131,7 @@ for `implementation` dependencies.
 For library authors, this is not quite as hassle-free as `compileOnly` dependencies on the JVM but:
 * The project setup remains fully transparent, predictable, intelligible and easily maintainable.
 * The use of dedicated bridge modules and enriched Gradle metadata on carrier modules is fully and perfectly backwards-compatible with the whole Gradle/KMP ecosystem, and it will stay that way.
-* Your project either compile or it does not run. No `RuntimeException` or other unpleasant surprises, because everything is known at compile-time.
+* Your project either compiles or it does not run. No `RuntimeException` or other unpleasant surprises, because everything is known at compile-time.
 
 In the end, no invasive changes to the KMP/Gradle tooling are required, as _modulator_ simply adds additional dependencies in the same way as adding them explicitly yourself.
 
@@ -143,7 +143,7 @@ The `example` directory contains two projects that showcase _modulator_:
    3. `coseToJose` providing mapper functionality from COSE to JOSE
 2. `modulatedConsumer` contains a single module that adds `cose` and `jose` dependencies and uses the mapping functionality provided by `cosetoJose`, showcasing that no explicit adding of this dependency is needed
 
-To try it out: publish `modulatingProduce` to maven local and open `mulatedConsumer` in IDEA to witness the magic!
+To try it out: publish `modulatingProduce` to maven local and open `modulatedConsumer` in IDEA to witness the magic!
 
 
 <hr>

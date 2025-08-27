@@ -1,3 +1,3 @@
 package at.asitplus.modulateddemo
 
-class SomeCoseDataStructure(val coseKid:String)
+class SomeCoseDataStructure(val someCoseSpecificProperty:ByteArray)

@@ -4,6 +4,6 @@ import at.asitplus.modulateddemo.toCose
 import at.asitplus.modulateddemo.toJose
 
 fun main(){
-    SomeCoseDataStructure("foo").toJose()
-    SomeJoseDataStructure("foo").toCose()
+    println(SomeCoseDataStructure("foo".encodeToByteArray()).toJose().someJoseSpecificData)
+    println(SomeJoseDataStructure("foo").toCose().someCoseSpecificProperty.decodeToString())
 }
