@@ -4,8 +4,7 @@
 
 # modulator – `compileOnly` Kotlin Multiplatform Dependencies without Dependency Hell
 
-
-[![A-SIT Plus Official](https://raw.githubusercontent.com/a-sit-plus/a-sit-plus.github.io/709e802b3e00cb57916cbb254ca5e1a5756ad2a8/A-SIT%20Plus_%20official_opt.svg)]([https://a-sit-plus.github.io](https://plus.a-sit.at/open-source.html))
+[![A-SIT Plus Official](https://raw.githubusercontent.com/a-sit-plus/a-sit-plus.github.io/709e802b3e00cb57916cbb254ca5e1a5756ad2a8/A-SIT%20Plus_%20official_opt.svg)](https://plus.a-sit.at/open-source.html)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-brightgreen.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Gradle plugin portal](https://img.shields.io/gradle-plugin-portal/v/at.asitplus.gradle.modulator?label=Gradle%20plugin%20portal)](https://plugins.gradle.org/plugin/at.asitplus.gradle.modulator)
 
